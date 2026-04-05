@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaibewafa POS | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>
+        // IMMEDIATE ROUTE PROTECTION
+        if (localStorage.getItem("terminal_auth") !== "session_active_beta_v1") {
+            window.location.replace("index.html");
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .active-cat { background-color: #ea580c !important; color: white !important; }
+        @media (max-width: 1024px) { 
+            .main-flex { flex-direction: column; height: auto; }
+            .sidebar { width: 100% !important; border-right: none; border-bottom: 1px solid #e5e7eb; }
+            .bill-panel { width: 100% !important; border-left: none; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <header class="h-16 bg-white border-b px-6 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <img src="images/logo.jpeg" class="w-10 h-10 rounded-lg object-cover border">
+            <h1 class="text-lg font-extrabold tracking-tight">CHAIBEWAFA <span class="text-orange-600">POS</span></h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="time" class="text-xs font-mono bg-gray-100 px-3 py-1 rounded border hidden sm:block"></div>
+            <button onclick="logout()" class="text-xs font-bold text-red-500 hover:underline">LOGOUT</button>
+        </div>
+    </header>
+
+    <div class="flex main-flex h-[calc(100vh-64px)] overflow-hidden">
+        
+        <nav class="sidebar w-64 bg-white border-r p-4 flex flex-col overflow-y-auto">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Categories</p>
+            <div class="flex lg:flex-col gap-1 overflow-x-auto pb-4 lg:pb-0">
+                <button id="cat-dilFenk" onclick="updateCategory('dilFenk')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition active-cat">🔥 Dil Fenk</button>
+                <button id="cat-dhoka" onclick="updateCategory('dhoka')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition">💔 Dhoka</button>
+                <button id="cat-pyassa" onclick="updateCategory('pyassa')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition">🥤 Drinks</button>
+                <button id="cat-galiyon" onclick="updateCategory('galiyon')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition">🍜 Chinese</button>
+                <button id="cat-ghar" onclick="updateCategory('ghar')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition">🏠 Paratha</button>
+                <button id="cat-combos" onclick="updateCategory('combos')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition">❤️ Combos</button>
+            </div>
+
+            <div class="mt-8 p-4 bg-gray-50 rounded-2xl border">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-3">Manual Entry</p>
+                <input id="customName" type="text" placeholder="Item Name" class="w-full text-xs p-2.5 mb-2 border rounded-lg outline-none">
+                <input id="customPrice" type="number" placeholder="Price" class="w-full text-xs p-2.5 mb-2 border rounded-lg outline-none">
+                <button onclick="addManualItem()" class="w-full bg-gray-800 text-white text-xs font-bold py-2.5 rounded-lg">Add to Bill</button>
+            </div>
+        </nav>
+
+        <main class="flex-1 p-6 overflow-y-auto bg-gray-50">
+            <h2 id="categoryTitle" class="text-2xl font-extrabold mb-6">Dil Fenk</h2>
+            <div id="menuItems" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        </main>
+
+        <aside class="bill-panel w-96 bg-white border-l flex flex-col shadow-2xl">
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-gray-700 uppercase text-xs tracking-widest">Order</h3>
+                <button onclick="resetCurrentOrder()" class="text-[10px] font-bold text-red-500 uppercase tracking-widest">Clear Plate</button>
+            </div>
+            <div id="billItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+            <div class="p-6 border-t bg-white space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total</span>
+                    <span class="text-3xl font-black text-orange-600 tracking-tighter">₹<span id="total">0</span></span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="handlePrint()" class="bg-orange-600 text-white font-bold py-4 rounded-2xl active:scale-95 transition shadow-lg shadow-orange-100 text-xs">PRINT & SAVE</button>
+                    <button onclick="saveOnly()" class="bg-gray-100 text-gray-800 font-bold py-4 rounded-2xl active:scale-95 transition text-xs">SAVE ONLY</button>
+                </div>
+                <button onclick="exportExcel()" class="w-full text-[10px] font-bold text-gray-300 uppercase text-center hover:text-orange-600 transition">Sales Excel</button>
+            </div>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
