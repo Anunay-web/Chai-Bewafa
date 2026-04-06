@@ -1,46 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaibewafa | Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maintenance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-['Inter']">
 
-    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl w-full max-w-md border border-gray-200 text-center">
-        <img src="images/logo.jpeg" class="w-20 h-20 mx-auto rounded-full mb-4 border-2 border-orange-100 shadow-sm object-cover">
-        <h2 class="text-2xl font-black text-gray-800">Terminal Access</h2>
-        <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1 mb-8">Chaibewafa POS Beta</p>
+<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 min-h-screen flex items-center justify-center">
 
-        <div class="space-y-4">
-            <input id="username" type="text" placeholder="Username" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-orange-500 transition font-medium">
-            <input id="password" type="password" placeholder="Password" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-orange-500 transition font-medium">
-            <button onclick="login()" class="w-full bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-orange-100 transition active:scale-95">
-                Login to Dashboard
-            </button>
-        </div>
-    </div>
+  <div class="bg-white/10 backdrop-blur-lg p-10 rounded-2xl shadow-2xl text-center max-w-lg w-full text-white">
+    
+    <h1 class="text-4xl font-bold mb-4">🚧 Under Maintenance</h1>
+    
+    <p class="text-lg mb-6">
+      We're currently working on improving our website.<br/>
+      We'll be back shortly!
+    </p>
 
-    <script>
-        // Check if already logged in, skip login if true
-        if (localStorage.getItem("terminal_auth") === "session_active_beta_v1") {
-            window.location.href = "dashboard.html";
-        }
+    <div class="animate-pulse text-5xl mb-6">⚙️</div>
 
-        function login() {
-            const u = document.getElementById("username").value;
-            const p = document.getElementById("password").value;
+    <p class="text-sm opacity-80">
+      Thank you for your patience 🙏
+    </p>
 
-            if (u === "owner" && p === "1234") {
-                localStorage.setItem("terminal_auth", "session_active_beta_v1");
-                window.location.href = "dashboard.html"; 
-            } else {
-                alert("Invalid Credentials");
-            }
-        }
-        document.addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
-    </script>
+    <button 
+      onclick="location.reload()" 
+      class="mt-6 px-6 py-2 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-200 transition"
+    >
+      Refresh
+    </button>
+
+  </div>
+
 </body>
 </html>
